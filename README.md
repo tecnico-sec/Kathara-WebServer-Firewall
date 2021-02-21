@@ -50,7 +50,7 @@ no ficheiro guia5-iptables.tgz.
 -   Kathara, [https://github.com/KatharaFramework/Kathara/wiki][3]
 
 -   Oskar Andreasson, Iptables Tutorial, version 1.2.2,
-    [[http://www.frozentux.net/iptables-tutorial/iptables-tutorial.html]{.ul}][4],
+    [http://www.frozentux.net/iptables-tutorial/iptables-tutorial.html][4],
     2006
 
   [1]: media/topologia-de-rede.png
