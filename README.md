@@ -1,24 +1,59 @@
-Instituto Superior Técnico, Universidade de Lisboa
+LETI 2020/21 | Segurança Informática em Redes e Sistemas
 
-**Network and Computer Security**
+---
 
-# Lab guide: ...
+# Guia de Laboratório 5 - NetKit-WebServer-Firewall
 
-## Goals
+## Objectivo
 
-- ...
-- ...
+O objectivo do guia consiste em configurar um servidor de web Apache e
+uma firewall simples (iptables).
 
-## Introduction
+## Exercício 1 -- Servidor web
 
-...
-## ...
+O exercício consiste em configurar o servidor de web Apache. Este
+servidor desenvolvido como um projecto de código aberto é desde 1996 o
+mais usado a nível mundial.
 
+Siga os passos indicados no "*official lab" Web Server* do Netkit, que
+se encontra aqui:
+[http://wiki.netkit.org/index.php/Labs_Official][2].
 
-**Acknowledgments**
-...
+## Exercício 2 -- Firewall
 
+Considere a rede abaixo, disponível sob a forma de um laboratório Netkit
+no ficheiro guia5-iptables.tgz.
 
-----
+![Topologia de Rede][1]
 
-[SIRS Faculty](mailto:meic-sirs@disciplinas.tecnico.ulisboa.pt)
+1.  Execute esse laboratório.
+
+2.  Execute um servidor *apache2* no servidor e aceda-lhe a partir do PC
+    usando um *browser.*
+
+3.  Se quiser bloquear o acesso do cliente ao servidor, quais são as
+    *chain* e tabela do *iptables* que deve usar?
+
+4.  Crie uma regra *iptables* para bloquear o acesso ao porto TCP/80 do
+    servidor. Tente novamente aceder ao servidor e observe como já não é
+    possível.
+
+5.  Bloqueie as mensagens ICMP tipo 8 (Echo Request) do PC para o
+    servidor. Observe como já não é possível fazer *ping* do PC para o
+    servidor. Observe como ainda é possível fazer *ping* do servidor
+    para o PC.
+
+6.  Liste as regras da *firewall.* Apague a segunda.
+
+## Referências
+
+-   Netkit, [[http://wiki.netkit.org/]{.ul}][3]
+
+-   Oskar Andreasson, Iptables Tutorial, version 1.2.2,
+    [[http://www.frozentux.net/iptables-tutorial/iptables-tutorial.html]{.ul}][4],
+    2006
+
+  [1]: media/topologia-de-rede.png
+  [2]: http://wiki.netkit.org/index.php/Labs_Official
+  [3]: http://wiki.netkit.org/
+  [4]: http://www.frozentux.net/iptables-tutorial/iptables-tutorial.html
