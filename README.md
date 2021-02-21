@@ -15,13 +15,13 @@ O exercício consiste em configurar o servidor de web Apache. Este
 servidor desenvolvido como um projecto de código aberto é desde 1996 o
 mais usado a nível mundial.
 
-Siga os passos indicados no "*official lab" Web Server* do Netkit, que
+Siga os passos indicados no "*official lab" Web Server* do Kathara, que
 se encontra aqui:
-[http://wiki.netkit.org/index.php/Labs_Official][2].
+[https://github.com/KatharaFramework/Kathara-Labs/tree/master/Application%20Level/WebServer][2].
 
 ## Exercício 2 -- Firewall
 
-Considere a rede abaixo, disponível sob a forma de um laboratório Netkit
+Considere a rede abaixo, disponível sob a forma de um laboratório kathara
 no ficheiro guia5-iptables.tgz.
 
 ![Topologia de Rede][1]
@@ -47,13 +47,13 @@ no ficheiro guia5-iptables.tgz.
 
 ## Referências
 
--   Netkit, [[http://wiki.netkit.org/]{.ul}][3]
+-   Kathara, [https://github.com/KatharaFramework/Kathara/wiki][3]
 
 -   Oskar Andreasson, Iptables Tutorial, version 1.2.2,
     [[http://www.frozentux.net/iptables-tutorial/iptables-tutorial.html]{.ul}][4],
     2006
 
   [1]: media/topologia-de-rede.png
-  [2]: http://wiki.netkit.org/index.php/Labs_Official
-  [3]: http://wiki.netkit.org/
+  [2]: https://github.com/KatharaFramework/Kathara-Labs/tree/master/Application%20Level/WebServer
+  [3]: https://github.com/KatharaFramework/Kathara/wiki
   [4]: http://www.frozentux.net/iptables-tutorial/iptables-tutorial.html
