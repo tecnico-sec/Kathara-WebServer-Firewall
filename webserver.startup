@@ -1,0 +1,16 @@
+ifconfig eth0 5.5.5.2 netmask 255.255.255.0 up
+route add default gw 5.5.5.1 dev eth0
+
+
+# Hacky way to enable .htaccess for this lab, don't use this 
+#
+sed -i 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf
+
+# Hacky way to set script permissions
+#
+chmod +x /usr/lib/cgi-bin/public/past_exam_answers.py
+chmod +x /usr/lib/cgi-bin/nonpublic/future_exam_answers.py
+
+# Start apache2
+#
+/etc/init.d/apache2 start
