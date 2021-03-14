@@ -85,20 +85,20 @@ Para o fazer-mos, a máquina sqlserver já está pré-configurada com um servido
 
 Siga os seguintes passos:
 
-1) Observe a topologia de rede da figura, vamos modificá-la de modo a que o servidor sql fique ligado também a firewall.
+1. Observe a topologia de rede da figura, vamos modificá-la de modo a que o servidor sql fique ligado também a firewall.
 
 ![Topologia de Rede][1]
 
-2) Adicione uma regra ao ficheiro webserver.startup de modo a saber para onde encaminhar os pacotes que vão para o pc1.
+2. Adicione uma regra ao ficheiro webserver.startup de modo a saber para onde encaminhar os pacotes que vão para o pc1.
 
-3) Modifique o ficheiro lab.conf de modo a ligar a máquina `sqlserver` ao switch 'B'.
+3. Modifique o ficheiro lab.conf de modo a ligar a máquina `sqlserver` ao switch 'B'.
 
-4) Confirme que o seguinte comando mostra resultados:
+4. Confirme que o seguinte comando mostra resultados:
 ```bash
 curl `http://<ip do webserver>/cgi-bin/public/past_exam_answers.py`
 ```
 
-5) Confirme que o seguinte comando não mostra resultados:
+5. Confirme que o seguinte comando não mostra resultados:
 ```bash
 curl `http://<ip do webserver>/cgi-bin/notpublic/future_exam_answers.py`
 ```
