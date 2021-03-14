@@ -26,8 +26,7 @@ Aconselhamos a ir guardando os comandos que façam alterações que forem fazend
 O exercício consiste em lançar o servidor de web Apache e configurá-lo, de modo a que, ao nível da aplicação,
 coloquemos algumas restrições sobre que ficheiros estão acessíveis.
 Este servidor, desenvolvido como um projecto de código aberto, é desde 1996 o mais usado a nível mundial.
-Pode consultar mais sobre o apache na sua documentação oficial (UNDONE: add link).
-Vamos agora executar alguns passos para configurar o Servidor.
+Vamos agora executar alguns passos para configurar o apache.
 
 1. Inicie o laboratório:
 ```bash
