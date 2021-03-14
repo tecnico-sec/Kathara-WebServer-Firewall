@@ -1,12 +1,12 @@
-LETI 2020/21 | Segurança Informática em Redes e Sistemas
+Instituto Superior Técnico, Universidade de Lisboa
 
----
+**Segurança Informática em Redes e Sistemas**
 
-# Guia de Laboratório 5 - NetKit-WebServer-Firewall
+# Guia de Laboratório - *Web Server and Firewall*
 
-## Objectivo
+## Objetivo
 
-O objectivo do guia consiste em configurar um servidor de web Apache e
+O objetivo do guia consiste em configurar um servidor de web Apache e
 uma firewall simples (iptables).
 
 
@@ -18,14 +18,14 @@ servir uma pagina web simples.
 Em segundo lugar, vamos adicionar um serviço usado por esse servidor web (um servidor de sql).
 Por fim, vamos configurar um firewall para mediar o acesso a essa pagina web.
 
-Aconselhamos a ir guardando os comandos que façam alterações que forem fazendo ao laboratório que queiram tornar permanentes no fim dos ficheiros de startup para conseguirem reproduzir rapidamente o trabalho efetuado. Se quiser ter testes as alterações que fez, pode criar pequenos scripts de python/bash com testes e coloca-los na pasta /shared e chama-los a partir do ficheiros de startup.
+Aconselhamos a ir guardando os comandos que façam alterações que forem fazendo ao laboratório que queiram tornar permanentes no fim dos ficheiros de startup para conseguirem reproduzir rapidamente o trabalho efetuado. Se quiser ter testes as alterações que fez, pode criar pequenos scripts de python/bash com testes e coloca-los na pasta `/shared` e chamá-los a partir do ficheiros de startup.
 
 
 ## Exercício 1 -- Servidor web
 
 O exercício consiste em lançar o servidor de web Apache e configurá-lo, de modo a que, ao nível da aplicação,
 coloquemos algumas restrições sobre que ficheiros estão acessíveis.
-Este servidor, desenvolvido como um projecto de código aberto, é desde 1996 o mais usado a nível mundial.
+Este servidor, desenvolvido como um projeto de código aberto, é desde 1996 o mais usado a nível mundial.
 Vamos agora executar alguns passos para configurar o apache.
 
 1. Inicie o laboratório:
@@ -183,6 +183,8 @@ iptables -F
 17. Liste as regras do firewall.
 
 18. Observe que continua a fazer conseguir pedidos http do pc1 para o webserver, mas que não consegue ligar-se ao sqlserver a partir do pc1.
+
+---- 
 
 ## Referências
 
