@@ -104,7 +104,7 @@ curl `http://<ip do webserver>/cgi-bin/notpublic/future_exam_answers.py`
 ```
 Mas que se executado localmente no webserver funciona:
 ```bash
-python `/usr/lib/cgi-bin/public/future_exam_answers.py`
+python /usr/lib/cgi-bin/public/future_exam_answers.py
 ```
 
 ## Exercício 3 -- Firewall
