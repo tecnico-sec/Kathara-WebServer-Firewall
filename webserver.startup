@@ -2,7 +2,7 @@ ifconfig eth0 5.5.5.2 netmask 255.255.255.0 up
 route add default gw 5.5.5.1 dev eth0
 
 
-# Hacky way to enable .htaccess for this lab, don't use this 
+# Hacky way to enable .htaccess for this lab, do not use this in production
 #
 sed -i 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf
 

@@ -1,7 +1,7 @@
 ifconfig eth0 5.5.5.3 netmask 255.255.255.0 up
 route add default gw 5.5.5.1 dev eth0
 
-# Hacky way to make mariadb network acessible, don't use this
+# Hacky way to make mariadb network acessible, do not use this in production
 #
 sed -i 's/127.0.0.1/5.5.5.3/g' /etc/mysql/mariadb.conf.d/50-server.cnf
 
