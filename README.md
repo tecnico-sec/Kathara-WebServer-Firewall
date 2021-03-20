@@ -81,7 +81,7 @@ Observar também que no ficheiro `access.log` foi registado o acesso pelo *IP* d
 Nota: ao tentar aceder a `exam_answers.py`, obterá um erro por não estar ligado ao serviço da base de dados. 
 Este erro será corrigido no exercício 2.
 
-9. Observe como, a partir do `pc1`, consegue obter `http://<ip do webserver>/notpublic/onlythis.jpg` e `cgi-bin/public/past_exam_answers.py`, o que não deveria acontecer.
+9. Observe como, a partir do `pc1`, consegue obter `http://<ip do webserver>/notpublic/onlymine.jpg` e `cgi-bin/public/past_exam_answers.py`, o que não deveria acontecer.
 Pelo menos conseguimos verificar que estes documentos foram acedidos indevidamente no `access.log`.
 É necessário corrigir a configuração de modo a que os documentos não estejam acessíveis.
 
@@ -119,18 +119,18 @@ Siga os seguintes passos:
 4. Confirme que o seguinte comando mostra resultados:
 
 ```bash
-curl `http://<ip do webserver>/cgi-bin/public/past_exam_answers.py`
+curl 'http://<ip do webserver>/cgi-bin/public/past_exam_answers.py'
 ```
 
 5. Confirme que o seguinte comando não mostra resultados:
 
 ```bash
-curl `http://<ip do webserver>/cgi-bin/notpublic/future_exam_answers.py`
+curl 'http://<ip do webserver>/cgi-bin/notpublic/future_exam_answers.py'
 ```
 
 Mas, se for executado localmente no `webserver`, já deve funcionar:
 ```bash
-python /usr/lib/cgi-bin/public/future_exam_answers.py
+python /usr/lib/cgi-bin/notpublic/future_exam_answers.py
 ```
 
 ----
@@ -143,8 +143,8 @@ Recorde a topologia de rede que utilizou no exercício 2 e vamos observar o comp
 1. No `pc1`, verifique que consegue aceder aos exames passados e não aos futuros, tal como se podia observar no servidor:
 
 ```bash
-curl `http://<ip do webserver>/cgi-bin/public/past_exam_answers.py`
-curl `http://<ip do webserver>/cgi-bin/notpublic/future_exam_answers.py`
+curl 'http://<ip do webserver>/cgi-bin/public/past_exam_answers.py'
+curl 'http://<ip do webserver>/cgi-bin/notpublic/future_exam_answers.py'
 ```
 
 2. Infelizmente, ainda temos problemas na nossa configuração de rede.
@@ -195,7 +195,7 @@ Se o comando falhar, relembra-se que deve usar o comando `iptables-legacy` em ve
 ```bash
 ping 5.5.5.1
 ping 5.5.5.2
-curl http://5.5.5.2/public/index.html
+curl 'http://5.5.5.2/public/index.html'
 ```
 
 9. Apague a regra de *input* que adicionou:
