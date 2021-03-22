@@ -224,9 +224,9 @@ iptables -F
 
 14. Crie uma regra para bloquear pacotes *ICMP* do `sqlserver` para o mundo exterior.
 
-15. Crie uma regra para bloquear o redireccionamento de pacotes do mundo exterior para o `sqlserver`.
+15. Crie, caso necessario, uma regra para bloquear o redireccionamento de pacotes do mundo exterior para o `sqlserver`.
 
-16. Crie regras para garantir que no servidor *web* a única porta onde é possível criar ligações é a `80` (onde se está a escutar o *HTTP*), mas que o redireccionamento de pacotes continua ativo.
+16. Crie regras, para garantir que no servidor *web* a única porta onde é possível criar ligações é a `80` (onde se está a escutar o *HTTP*), mas que o redireccionamento de pacotes continua ativo.
 
 Pode testar que noutras portas não é possível criar ligações pondo um serviço à espera de ligações numa porta.
 Por exemplo, pode usar o comando `nc -l 1314` para colocar um processo à espera de ligações na porta indicada como argumento.
