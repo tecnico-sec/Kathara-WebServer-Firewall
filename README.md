@@ -100,6 +100,12 @@ deny from all
   deny from all
 </Directory>
 ```
+Alternativamente, podemos apenas ativar ficheiros `.htaccess` para o diretório em questão:
+```
+<Directory /usr/lib/cgi-bin/notpublic/>
+  AllowOverride All
+</Directory>
+```
 
 12. Reinicie o apache2 e volte a executar os pedidos com o `curl` e confirme que a resposta do servidor é `403 Forbidden`.
 
