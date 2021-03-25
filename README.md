@@ -93,7 +93,7 @@ Coloque um ficheiro `.htaccess` com este conteúdo na pasta `notpublic` e reinic
 deny from all
 ```
 
-11. Para os ficheiros na pasta `/var/lib/cgi-bin`, o apache por definição não executa os ficheiros `.htaccess`. Para corrigir isso, podemos por no ficheiro `/etc/apache2/apache2.conf` uma regra equivalente a um ficheiro `.htaccess`. Podemos observar no ficheiro regras equivalentes `/etc/apache2/apache2.conf` e adicionar esta nova regra:
+11. Para os ficheiros na pasta `/var/lib/cgi-bin`, o apache por definição não executa os ficheiros `.htaccess`. Para corrigir isso, podemos por no ficheiro `/etc/apache2/apache2.conf` uma regra equivalente a um ficheiro `.htaccess`. Podemos observar no ficheiro `/etc/apache2/apache2.conf` regras equivalentes e adicionar esta nova regra:
 
 ```
 <Directory /usr/lib/cgi-bin/notpublic/>
@@ -101,7 +101,7 @@ deny from all
 </Directory>
 ```
 
-12. Volte a executar os pedidos com o `curl` e confirme que a resposta do servidor é `403 Forbidden`.
+12. Reinicie o apache2 e volte a executar os pedidos com o `curl` e confirme que a resposta do servidor é `403 Forbidden`.
 
 ----
 
