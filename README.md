@@ -93,7 +93,15 @@ Coloque um ficheiro `.htaccess` com este conteúdo na pasta `notpublic` e reinic
 deny from all
 ```
 
-11. Volte a executar os pedidos com o `curl` e confirme que a resposta do servidor é `403 Forbidden`.
+11. Para os ficheiros na pasta `/var/lib/cgi-bin`, o apache por definição não executa os ficheiros `.htaccess`. Para corrigir isso, podemos por no ficheiro `/etc/apache2/apache2.conf` uma regra equivalente a um ficheiro `.htaccess`. Podemos observar no ficheiro regras equivalentes `/etc/apache2/apache2.conf` e adicionar esta nova regra:
+
+```
+<Directory /usr/lib/cgi-bin/notpublic/>
+  deny from all
+</Directory>
+```
+
+12. Volte a executar os pedidos com o `curl` e confirme que a resposta do servidor é `403 Forbidden`.
 
 ----
 
@@ -112,18 +120,16 @@ Siga os seguintes passos:
 
 ![Topologia de Rede][1]
 
-2. Adicione uma regra ao ficheiro `webserver.startup` de modo a saber para onde encaminhar os pacotes que vão para o `pc1`.
+2. Modifique o ficheiro `lab.conf` de modo a ligar a máquina `sqlserver` a um novo *collision domain* ligado à *firewall*.
 
-3. Modifique o ficheiro `lab.conf` de modo a ligar a máquina `sqlserver` ao switch `B`.
+3. Configure o ficheiro `firewall.startup` para configurar a ligação à nova interface criada. Poderá ser necessário mudar a subrede configurada para a interface ligada ao webserver.
 
 4. Confirme que o seguinte comando mostra resultados:
-
 ```bash
 curl 'http://<ip do webserver>/cgi-bin/public/past_exam_answers.py'
 ```
 
 5. Confirme que o seguinte comando não mostra resultados:
-
 ```bash
 curl 'http://<ip do webserver>/cgi-bin/notpublic/future_exam_answers.py'
 ```
