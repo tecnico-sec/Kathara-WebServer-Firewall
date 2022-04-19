@@ -48,8 +48,8 @@ Ambos são alternativas para gerir a inicialização do sistema operativo e resp
 Dentro do `webserver` execute o comando `curl` para tentar pedir o ficheiro `public/index.html`.
 
 ```bash
-curl -v 'http://localhost/public/index.html'
-curl -v 'http://localhost/notpublic/onlymine.jpg'
+curl -v 'http://127.0.0.1/public/index.html'
+curl -v 'http://127.0.0.1/notpublic/onlymine.jpg'
 ```
 
 4. Após fazer este pedido, observe como o *Apache* guarda no ficheiro `/var/log/apache2/access.log` informação relativa ao pedido que foi feito.
