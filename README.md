@@ -69,7 +69,7 @@ a2enmod cgi
 
 Podemos verificar que o módulo foi ativado verificando que na pasta `/etc/apache2/mods-enabled` se encontra um ficheiro com o nome do módulo (no caso, `cgi`).
 
-6. É possível executar *scripts* dentro da pasta `/usr/lib/cgi-bin/` como resposta a pedidos HTTP, por exemplo `public/exam_answers.py`:
+6. É possível executar *scripts* dentro da pasta `/usr/lib/cgi-bin/` como resposta a pedidos HTTP, por exemplo `public/past_exam_answers.py`:
 
 ```bash
 curl -v 'http://127.1.2.3/cgi-bin/public/past_exam_answers.py'
@@ -78,10 +78,10 @@ curl -v 'http://127.1.2.3/cgi-bin/public/past_exam_answers.py'
 7. Usando o `curl`, observe como, a partir do `pc1`, consegue obter as página web `http://<ip do webserver>/public/index.html` e `cgi-bin/public/past_exam_answers.py` como esperado.
 Observar também que no ficheiro `access.log` foi registado o acesso pelo *IP* do `pc1`.  
 
-Nota: ao tentar aceder a `exam_answers.py`, obterá um erro por não estar ligado ao serviço da base de dados. 
+Nota: ao tentar aceder a `past_exam_answers.py`, obterá um erro por não estar ligado ao serviço da base de dados. 
 Este erro será corrigido no exercício 2.
 
-9. Observe como, a partir do `pc1`, consegue obter `http://<ip do webserver>/notpublic/onlymine.jpg` e `cgi-bin/public/past_exam_answers.py`, o que não deveria acontecer.
+9. Observe como, a partir do `pc1`, consegue obter `http://<ip do webserver>/notpublic/onlymine.jpg` e `cgi-bin/notpublic/future_exam_answers.py`, o que não deveria acontecer.
 Pelo menos conseguimos verificar que estes documentos foram acedidos indevidamente no `access.log`.
 É necessário corrigir a configuração de modo a que os documentos não estejam acessíveis.
 
