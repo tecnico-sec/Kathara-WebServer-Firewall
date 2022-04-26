@@ -109,7 +109,7 @@ Alternativamente, podemos apenas ativar ficheiros `.htaccess` para o diretório 
 
 12. Reinicie o apache2 e volte a executar os pedidos com o `curl` e confirme que a resposta do servidor é `403 Forbidden`.
 
-13. Como estamos a usar uma simulação, quando o laboratório é reniciado o ficheiro `/etc/apache2/apache2.conf` é limpo. De forma a manter esta alteração de forma persistente, é possivel adicionar as seguinte linhas no ficheiro `webserver.startup` :
+13. Como estamos a usar uma simulação, quando o laboratório é reiniciado o ficheiro `/etc/apache2/apache2.conf` é limpo. De forma a persistir esta alteração de forma persistente, é possivel adicionar as seguintes linhas no ficheiro `webserver.startup` :
 
 ```
 # Add these 3 lines
@@ -118,7 +118,7 @@ echo '   deny from all' >> /etc/apache2/apache2.conf
 echo '</Directory>' >> /etc/apache2/apache2.conf
 ```
 
-Se escolheu usar `AllowOverride All`mude de acordo.
+Se escolheu usar `AllowOverride All` mude de acordo.
 
 ----
 
@@ -129,7 +129,7 @@ Este serviço será usado pelo `webserver` na página `http://<ip do webserver>/
 
 A máquina `sqlserver` já está pré-configurada com um servidor de *SQL*.
 Agora é necessário ligá-la à rede de modo a que esteja acessível pelo servidor.
-Depois, é preciso modificar a segunda linha nos dois ficheiros `past_exam_answers.py` e `future_exam_answers.py` para ter o *IP* e porta de acesso ao `sqlserver`.
+Depois, é preciso modificar a segunda linha nos ficheiros `past_exam_answers.py` e `future_exam_answers.py` para ter o *IP* e porta de acesso ao `sqlserver`.
 
 Siga os seguintes passos:
 
