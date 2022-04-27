@@ -109,7 +109,7 @@ Alternativamente, podemos apenas ativar ficheiros `.htaccess` para o diretório 
 
 12. Reinicie o apache2 e volte a executar os pedidos com o `curl` e confirme que a resposta do servidor é `403 Forbidden`.
 
-13. Como estamos a usar uma simulação, quando o laboratório é reiniciado o ficheiro `/etc/apache2/apache2.conf` é limpo. De forma a persistir esta alteração de forma persistente, é possivel adicionar as seguintes linhas no ficheiro `webserver.startup` :
+13. Como estamos a usar uma simulação, quando o laboratório é reiniciado o ficheiro `/etc/apache2/apache2.conf` é limpo. De forma a persistir esta alteração é possivel adicionar as seguintes linhas no ficheiro `webserver.startup` :
 
 ```
 # Add these 3 lines
