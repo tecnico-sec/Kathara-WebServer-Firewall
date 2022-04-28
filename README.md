@@ -179,7 +179,7 @@ nmap <ip do sqlserver>
 
 3. A porta do *MariaDB* (`3306`) está acessível ao mundo exterior.
 Isto tem dois problemas.
-Em primeiro lugar é possível a um atacante tentar descobrir a nossa senha (especialmente dado que a senha é `password`, substitua o IP 5.5.5.3 pelo correspondente do webserver):
+Em primeiro lugar é possível a um atacante tentar descobrir a nossa senha (especialmente dado que a senha é `password`, substitua o IP 5.5.5.3 pelo correspondente do sqlserver):
 
 ```bash
 # a partir do pc1:
