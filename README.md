@@ -197,7 +197,7 @@ Para isso vamos utilizar o comando `iptables` (no debian10 temos de usar o coman
 iptables -L
 ```
 
-Verá que existem 3 tipos de regras (INPUT, FORWARD, OUTPUT), e que não existem regras configuradas na *firewall* atualmente.
+Verá que existem 3 tipos de regras (INPUT, FORWARD, OUTPUT), denominadas *chains*, e que não existem regras configuradas na *firewall* atualmente.
 
 6. Caso queira apagar a *firewall*, pode apagar todas as regras existentes executando:
 
@@ -228,9 +228,9 @@ iptables –D INPUT –p icmp –j DROP
 ``` 
 
 10. Repita os passos 7 a 9, trocando `INPUT` com `FORWARD` e `OUTPUT`, de modo a observar o que acontece em cada caso.
-Certifique-se que entende o que faz cada regra.
+Certifique-se que entende o que faz cada regra. Porque é que numa firewall se usa sobretudo a chain `FORWARD`?
 
-11. Se quisermos, também podemos criar regras mais específicas, por exemplo, a seguinte regra bloqueia ligações *TCP* com destino à porta 23 de qualquer endereço na rede `42.42.0.0/16` provenientes da rede `192.168.2.0/24`.
+11. Se quisermos, também podemos criar regras mais específicas, por exemplo, a seguinte regra bloqueia ligações *TCP* com destino à porta 23 de qualquer endereço na rede `42.42.0.0/16` provenientes da rede `192.168.2.0/24` (ou aceitaria ligações com essas características se trocássemos *DROP* por *ACCEPT*).
 
 ```bash
 iptables –A INPUT –p tcp –s 192.168.2.0/24 -d 42.42.0.0/16 –-dport 23 –j DROP
@@ -243,20 +243,20 @@ Comece por apagar todas as regras que criou na *firewall*:
 iptables -F
 ```
 
-13. Crie uma regra de *ip tables* para bloquear o acesso de qualquer pacote do mundo exterior ao `sqlserver`.
+13. Crie uma ou mais regras para permitir que é possível aceder ao servidor *web*, nomeadamente ao porto `80`desse servidor usando o protocolo `TCP`, sobre o qual o protocolo `HTTP` é encapsulado. 
 
-14. Crie uma regra para bloquear pacotes *ICMP* do `sqlserver` para o mundo exterior.
+14. Crie uma ou mais regras parabloquear todo o restante tráfego que vem de fora da rede, ou seja, que passa pela firewall.
 
-15. Crie, caso necessario, uma regra para bloquear o redireccionamento de pacotes do mundo exterior para o `sqlserver`.
-
-16. Crie regras, para garantir que no servidor *web* a única porta onde é possível criar ligações é a `80` (onde se está a escutar o *HTTP*), mas que o redireccionamento de pacotes continua ativo.
-
-Pode testar que noutras portas não é possível criar ligações pondo um serviço à espera de ligações numa porta.
+15. Teste que noutras portas não é possível criar ligações pondo um serviço à espera de ligações numa porta.
 Por exemplo, pode usar o comando `nc -l 1314` para colocar um processo à espera de ligações na porta indicada como argumento.
 
-17. Liste as regras da *firewall*.
+16. Teste que não é possível acesso de qualquer pacote do mundo exterior ao `sqlserver`.
 
-18. Observe que continua a fazer conseguir pedidos *HTTP* do `pc1` para o `webserver`, mas que não consegue ligar-se ao `sqlserver` a partir do `pc1`.
+17. Teste que não é possível enviar pacotes *ICMP* do `sqlserver` para o mundo exterior.
+
+18. Liste as regras da *firewall*.
+
+19. Observe que continua a fazer conseguir pedidos *HTTP* do `pc1` para o `webserver`, mas que não consegue ligar-se ao `sqlserver` a partir do `pc1`.
 
 Os objetivos de isolamento na configuração de rede foram alcançados!
 
