@@ -243,9 +243,9 @@ Comece por apagar todas as regras que criou na *firewall*:
 iptables -F
 ```
 
-13. Crie uma ou mais regras para permitir que é possível aceder ao servidor *web*, nomeadamente ao porto `80`desse servidor usando o protocolo `TCP`, sobre o qual o protocolo `HTTP` é encapsulado. 
+13. Crie uma ou mais regras para permitir que seja possível aceder ao servidor *web*, nomeadamente ao porto `80`desse servidor usando o protocolo `TCP`, sobre o qual o protocolo `HTTP` é encapsulado. 
 
-14. Crie uma ou mais regras parabloquear todo o restante tráfego que vem de fora da rede, ou seja, que passa pela firewall.
+14. Crie uma ou mais regras para bloquear todo o restante tráfego que vem de fora da rede, ou seja, que passa pela firewall.
 
 15. Teste que noutras portas não é possível criar ligações pondo um serviço à espera de ligações numa porta.
 Por exemplo, pode usar o comando `nc -l 1314` para colocar um processo à espera de ligações na porta indicada como argumento.
