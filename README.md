@@ -87,7 +87,7 @@ Pelo menos conseguimos verificar que estes documentos foram acedidos indevidamen
 
 10. Vamos então desativar o acesso a esses documentos.
 Para o fazer, o *Apache* permite definir permissões por pasta, criando um ficheiro `.htaccess` na raiz da pasta na qual queremos definir permissões.
-Coloque um ficheiro `.htaccess` com este conteúdo na pasta `notpublic` e reinicie o laboratório:
+Coloque um ficheiro `.htaccess` com este conteúdo na pasta `notpublic` e reinicie o apache2:
 
 ```bash
 deny from all
