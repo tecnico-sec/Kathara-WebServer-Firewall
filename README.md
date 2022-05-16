@@ -6,11 +6,13 @@ Instituto Superior Técnico, Universidade de Lisboa
 
 ## Objetivo
 
-O objetivo deste laboratório é configurar um servidor *web*, usando [*Apache*](https://httpd.apache.org/), e uma *firewall* simples, usando `iptables`.
+O objetivo deste laboratório é configurar um servidor *web*, usando [*Apache*](https://httpd.apache.org/), e uma *firewall* simples, usando `iptables`. A topologia da rede encontra-se abaixo.
+
+![Topologia de Rede][1]
 
 ## Introdução
 
-O laboratório está estruturado em três partes sequenciais.
+Este guião está estruturado em três partes.
 Em primeiro lugar, vamos configurar um servidor *web* *Apache* com o objetivo de servir uma página *web* simples.
 Em segundo lugar, vamos adicionar um servidor de base de dados *SQL*, que será usado pelo servidor *web*.
 Por fim, vamos configurar uma *firewall* para controlar o acesso à página *web*.
@@ -93,7 +95,7 @@ Coloque um ficheiro `.htaccess` com este conteúdo na pasta `notpublic` na direc
 deny from all
 ```
 
-11. Para os ficheiros na pasta `/var/lib/cgi-bin`, o apache por definição não executa os ficheiros `.htaccess`. Para corrigir isso, podemos por no ficheiro `/etc/apache2/apache2.conf` uma regra equivalente a um ficheiro `.htaccess`. Podemos observar no ficheiro `/etc/apache2/apache2.conf` regras equivalentes e adicionar esta nova regra:
+11. Para os ficheiros na pasta `/var/lib/cgi-bin`, o apache por definição não executa os ficheiros `.htaccess`. Para corrigir isso, podemos pôr no ficheiro `/etc/apache2/apache2.conf` uma regra equivalente a um ficheiro `.htaccess`. Podemos observar no ficheiro `/etc/apache2/apache2.conf` regras equivalentes e adicionar esta nova regra:
 
 ```
 <Directory /usr/lib/cgi-bin/notpublic/>
@@ -134,8 +136,6 @@ Depois, é preciso modificar a segunda linha nos ficheiros `past_exam_answers.py
 Siga os seguintes passos:
 
 1. Observe a topologia de rede da figura, vamos modificá-la de modo a que o servidor *SQL* fique ligado também à *firewall*.
-
-![Topologia de Rede][1]
 
 2. Modifique o ficheiro `lab.conf` de modo a ligar a máquina `sqlserver` a um novo *collision domain* ligado à *firewall*.
 
