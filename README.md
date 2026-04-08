@@ -2,33 +2,23 @@ Instituto Superior Técnico, Universidade de Lisboa
 
 **Segurança Informática em Redes e Sistemas**
 
-# Guia de Laboratório - *Web Server and Firewall*
+# Guia de Laboratório - *Nmap*
 
 ## Objetivo
 
-O objetivo deste laboratório é configurar um servidor *web*, usando [*Apache*](https://httpd.apache.org/), e uma *firewall* simples, usando `iptables`. A topologia da rede encontra-se abaixo.
+O objetivo deste laboratório é aprender as potencialidades do *Nmap* ("Network Mapper"). O *Nmap* é uma ferramenta de código aberto amplamente utilizada para descoberta de máquinas e serviços numa rede. Permite identificar máquinas ativas, portas abertas, serviços em execução e, em muitos casos, obter informação útil sobre versões e sistemas operativos, sendo por isso muito usado em tarefas de administração, diagnóstico e auditoria de segurança.
+
+O laboratório usa uma rede baseada na do laboratório no qual foi configurado um servidor *web* e uma *firewall*. A topologia da rede contém um PC, um servidor *web* e um servidor SQL, todos na mesma LAN, interligados por um *hub* (um *collision domain* do Kathará):
 
 ![Topologia de Rede][1]
 
-## Introdução
+Como poder inferir da topologia e dos ficheiros de configuração, o endereço da subrede é o 5.5.5.0/24.
 
-Este guião está estruturado em três partes.
-Em primeiro lugar, vamos configurar um servidor *web* *Apache* com o objetivo de servir uma página *web* simples.
-Em segundo lugar, vamos adicionar um servidor de base de dados *SQL*, que será usado pelo servidor *web*.
-Por fim, vamos configurar uma *firewall* para controlar o acesso à página *web*.
+Em primeiro lugar, vamos configurar um servidor *web* *Apache* e um servidor de base de dados *SQL* que será usado pelo servidor *web*.
+Depois vamos então explorar o comando *Nmap*.
 
-**Sugestão:** os comandos que fazem alterações e que queira tornar permanentes podem ser colocados no fim dos ficheiros de arranque (*startup*).
-Isto permite reproduzir rapidamente o trabalho efetuado.  
-Para testar alterações, pode criar pequenos *scripts* de *Python*/*Bash*, colocá-los na pasta `/shared` e chamá-los a partir dos ficheiros de *startup*.
 
-## Exercício 1 -- Servidor *web*
-
-O servidor *Apache* serve documentos, por exemplo, páginas *HTML*, para a *world wide web*.
-Este servidor foi desenvolvido como um projeto de código aberto e é, desde 1996, o mais usado a nível mundial.
-
-O exercício consiste em lançar o servidor *Apache* e configurá-lo, de modo a que, ao nível da aplicação, sejam colocadas algumas restrições sobre os documentos que estão acessíveis.
-
-Vamos agora executar alguns passos para configurar o *Apache*.
+## Exercício 1 -- Configuração de base
 
 1. Inicie o laboratório:
 
@@ -36,229 +26,98 @@ Vamos agora executar alguns passos para configurar o *Apache*.
 kathara lstart
 ```
 
-2. Verifique que no `webserver` o serviço `apache2` está a correr.
+2. Verifique que no `webserver` o serviço `apache2` está em execução.
 
 ```bash
 /etc/init.d/apache2 status
 ```
 
-A pasta `/etc/init.d` contém os serviços duma máquina *Linux* no modo `SysVInit`.
-Atualmente será mais comum encontrar o comando `systemctl` do modo `systemd` em vez do `SysVInit`.
-Ambos são alternativas para gerir a inicialização do sistema operativo e respetivos serviços.
+Se não estiver, execute-o.
 
-3. No debian10, os URLs disponibilizados pelo *Apache*, mapeiam para ficheiros dentro da pasta `/var/www/html` por omissão.
-Dentro do `webserver` execute o comando `curl` para tentar pedir o ficheiro `public/index.html`.
-
-```bash
-curl -v 'http://127.0.0.1/public/index.html'
-curl -v 'http://127.0.0.1/notpublic/onlymine.jpg'
-```
-
-4. Após fazer este pedido, observe como o *Apache* guarda no ficheiro `/var/log/apache2/access.log` informação relativa ao pedido que foi feito.
-
-```bash
-tail -n 10 /var/log/apache2/access.log 
-```
-
-5. O *Apache* contém diferentes módulos que podem ser opcionalmente ativados para implementar funcionalidades. 
-Um desses módulos é `cgi` (*common gateway interface*), que permite executar *scripts* quando um determinado documento é pedido.  
-Para ativar o módulo:
-
-```bash
-a2enmod cgi
-/etc/init.d/apache2 restart
-```
-
-Podemos verificar que o módulo foi ativado verificando que na pasta `/etc/apache2/mods-enabled` se encontra um ficheiro com o nome do módulo (no caso, `cgi`).
-
-6. É possível executar *scripts* dentro da pasta `/usr/lib/cgi-bin/` como resposta a pedidos HTTP, por exemplo `public/past_exam_answers.py`:
-
-```bash
-curl -v 'http://127.1.2.3/cgi-bin/public/past_exam_answers.py'
-```
-
-7. Usando o `curl`, observe como, a partir do `pc1`, consegue obter as página web `http://<ip do webserver>/public/index.html` e `cgi-bin/public/past_exam_answers.py` como esperado.
-Observar também que no ficheiro `access.log` foi registado o acesso pelo *IP* do `pc1`.  
-
-Nota: ao tentar aceder a `past_exam_answers.py`, obterá um erro por não estar ligado ao serviço da base de dados. 
-Este erro será corrigido no exercício 2.
-
-9. Observe como, a partir do `pc1`, consegue obter `http://<ip do webserver>/notpublic/onlymine.jpg` e `cgi-bin/notpublic/future_exam_answers.py`, o que não deveria acontecer.
-Pelo menos conseguimos verificar que estes documentos foram acedidos indevidamente no `access.log`.
-É necessário corrigir a configuração de modo a que os documentos não estejam acessíveis.
-
-10. Vamos então desativar o acesso a esses documentos.
-Para o fazer, o *Apache* permite definir permissões por pasta, criando um ficheiro `.htaccess` na raiz da pasta na qual queremos definir permissões.
-Coloque um ficheiro `.htaccess` com este conteúdo na pasta `notpublic` na directoria do laboratório e reinicie o laboratório:
-
-```bash
-deny from all
-```
-
-11. Para os ficheiros na pasta `/var/lib/cgi-bin`, o apache por definição não executa os ficheiros `.htaccess`. Para corrigir isso, podemos pôr no ficheiro `/etc/apache2/apache2.conf` uma regra equivalente a um ficheiro `.htaccess`. Podemos observar no ficheiro `/etc/apache2/apache2.conf` regras equivalentes e adicionar esta nova regra:
-
-```
-<Directory /usr/lib/cgi-bin/notpublic/>
-  deny from all
-</Directory>
-```
-Alternativamente, podemos apenas ativar ficheiros `.htaccess` para o diretório em questão:
-```
-<Directory /usr/lib/cgi-bin/notpublic/>
-  AllowOverride All
-</Directory>
-```
-
-12. Reinicie o apache2 e volte a executar os pedidos com o `curl` e confirme que a resposta do servidor é `403 Forbidden`.
-
-13. Como estamos a usar uma simulação, quando o laboratório é reiniciado o ficheiro `/etc/apache2/apache2.conf` é limpo. De forma a persistir esta alteração é possivel adicionar as seguintes linhas no ficheiro `webserver.startup` (antes de iniciar o apache):
-
-```
-# Add these 3 lines
-echo '<Directory /usr/lib/cgi-bin/notpublic/>' >> /etc/apache2/apache2.conf
-echo '   deny from all' >> /etc/apache2/apache2.conf
-echo '</Directory>' >> /etc/apache2/apache2.conf
-```
-
-Se escolheu usar `AllowOverride All` mude de acordo.
 
 ----
 
-## Exercício 2 -- Servidor de bases de dados
+## Exercício 2 -- *Nmap* básico
 
-Agora que temos o servidor *Apache* configurado, vamos adicionar um novo servidor à nossa rede que terá um serviço *SQL* ([MariaDB](https://mariadb.org/)), à escuta de pedidos na porta `3306`.
-Este serviço será usado pelo `webserver` na página `http://<ip do webserver>/cgi-bin/public/past_exam_answers.py`.
+Neste exercício vamos usar o *Nmap* para 
 
-A máquina `sqlserver` já está pré-configurada com um servidor de *SQL*.
-Agora é necessário ligá-la à rede de modo a que esteja acessível pelo servidor.
-Depois, é preciso modificar a segunda linha nos ficheiros `past_exam_answers.py` e `future_exam_answers.py` para ter o *IP* e porta de acesso ao `sqlserver`.
+1. O posto de trabalho vai ser o `pc1`. Confirme que o *Nmap* está instalado executando:
 
-Siga os seguintes passos:
-
-1. Observe a topologia de rede da figura, vamos modificá-la de modo a que o servidor *SQL* fique ligado também à *firewall*.
-
-2. Modifique o ficheiro `lab.conf` de modo a ligar a máquina `sqlserver` a um novo *collision domain* ligado à *firewall*.
-
-3. Configure o ficheiro `firewall.startup` para configurar a ligação à nova interface criada. Poderá ser necessário mudar a subrede configurada para a interface ligada ao webserver.
-
-4. Confirme que o seguinte comando mostra resultados:
 ```bash
-curl 'http://<ip do webserver>/cgi-bin/public/past_exam_answers.py'
+nmap --version
 ```
 
-5. Confirme que o seguinte comando não mostra resultados:
+2. Execute um scan simples à subrede:
+
 ```bash
-curl 'http://<ip do webserver>/cgi-bin/notpublic/future_exam_answers.py'
+nmap 5.5.5.0/24
 ```
 
-Mas, se for executado localmente no `webserver`, já deve funcionar:
+Quantas máquinas existem na rede e quais os seus endereços IP?
+
+3. Execute um scan apenas para descobrir hosts ativos:
+
 ```bash
-python /usr/lib/cgi-bin/notpublic/future_exam_answers.py
+nmap -sn 5.5.5.0/24
 ```
+
+4. Execute um scan completo de portas TCP do `webserver`. Em que portos está à escuta o servidor Apache?
+
+```bash
+nmap -p- <ip_do_host>
+```
+
+5. Execute um scan completo de portas TCP do `sqlserver`. O servidor MariaDB deve estar à escuta no porto TCP/3306. Está?
+
+```bash
+nmap -p- <ip_do_host>
+```
+
+6. Procure respostas para as seguintes questões:
+
+Qual a diferença entre *open*, *closed* e *filtered*?
+
+Porque alguns portos aparecem como *filtered*?
+
 
 ----
 
-## Exercício 3 -- *Firewall*
+## Exercício 3 -- Descoberta de serviços e sistemas operativos
 
-Agora que temos a nossa aplicação *web* de perguntas de exames a correr no servidor, de forma correta, vamos observar o comportamento do ponto de vista de um utilizador.
-Recorde a topologia de rede que utilizou no exercício 2 e vamos observar o comportamento a partir do `pc1`.
+O *Nmap* pode usar heurísticas para compreender mais sobre as máquinas da rede. Um primeiro caso, é a deteção de serviços, usando o comando `nmap -sV <ip_do_host>`
 
-1. No `pc1`, verifique que consegue aceder aos exames passados e não aos futuros, tal como se podia observar no servidor:
-
-```bash
-curl 'http://<ip do webserver>/cgi-bin/public/past_exam_answers.py'
-curl 'http://<ip do webserver>/cgi-bin/notpublic/future_exam_answers.py'
-```
-
-2. Infelizmente, ainda temos problemas na nossa configuração de rede.
-Observe o que acontece se executar o seguinte comando no cliente:
+1. Vamos detectar os serviços do `webserver`. Execute o seguinte comando medindo o tempo aproximado que demora a ser executado:
 
 ```bash
-nmap <ip do sqlserver>
+nmap -sV <ip_do_host>
 ```
 
-3. A porta do *MariaDB* (`3306`) está acessível ao mundo exterior.
-Isto tem dois problemas.
-Em primeiro lugar é possível a um atacante tentar descobrir a nossa senha (especialmente dado que a senha é `password`, substitua o IP 5.5.5.3 pelo correspondente do sqlserver):
+Repita com o seguinte comando que restringe os portos inspecionados:
 
 ```bash
-# a partir do pc1:
-mysql -u root -D sirs -e "SELECT * from exams;" -h 5.5.5.3 -ppassword
+nmap -sV -p 22,80,443 <ip_do_host>
 ```
 
-Em segundo lugar, mesmo sem saber a senha, é possível que o atacante "bombardeie" a porta com pedidos de tentativas de estabelecimento de ligação que consumam recursos no servidor e impeçam ligações legítimas de serem estabelecidas.
+Qual a diferença entre o tempo de execução e os resultados obtidos pelos dois comandos?
 
-4. Vamos utilizar a *firewall* para criar regras que forcem a só expormos os serviços da rede `5.5.5.0/24` que queremos **explicitamente** expor para o mundo exterior. 
-Para isso vamos utilizar o comando `iptables` (no debian10 temos de usar o comando `iptables-legacy`, porque atualmente o comando `iptables` não funciona corretamente).
-
-5. Na máquina `firewall`, execute seguinte comando para listar as regras atuais da *firewall*:
-
-```
-iptables -L
-```
-
-Verá que existem 3 tipos de regras (INPUT, FORWARD, OUTPUT), denominadas *chains*, e que não existem regras configuradas na *firewall* atualmente.
-
-6. Caso queira apagar a *firewall*, pode apagar todas as regras existentes executando:
-
-```
-iptables -F
-```
-
-7. Vamos começar por adicionar uma regra simples que bloqueia todos os pacotes ICMP (*pings*) que tenham como destino a *firewall*:
-
-```
-iptables –A INPUT –p icmp –j DROP
-```
-
-Se o comando falhar, relembra-se que deve usar o comando `iptables-legacy` em vez de `iptables`.
-
-8. Observe o resultado na `firewall` (`iptables -L`) e verifique o resultado de tentar "pingar" a `firewall` e o `webserver` a partir do `pc1` e de estabelecer uma ligação *TCP* (obter uma página alojada no `webserver`).
+2. Repita para o `sqlserver`:
 
 ```bash
-ping 5.5.5.1
-ping 5.5.5.2
-curl 'http://5.5.5.2/public/index.html'
+nmap -sV <ip_do_host>
 ```
 
-9. Apague a regra de *input* que adicionou:
+O que é que o comando diz sobre o serviço SQL?
+
+3. O *Nmap* também usa heurísticas para detectar o sistema operativo em execução numa máquina. Execute para um dos servidores:
 
 ```bash
-iptables –D INPUT –p icmp –j DROP
-``` 
-
-10. Repita os passos 7 a 9, trocando `INPUT` com `FORWARD` e `OUTPUT`, de modo a observar o que acontece em cada caso.
-Certifique-se que entende o que faz cada regra. Porque é que numa firewall se usa sobretudo a chain `FORWARD`?
-
-11. Se quisermos, também podemos criar regras mais específicas, por exemplo, a seguinte regra bloqueia ligações *TCP* com destino à porta 23 de qualquer endereço na rede `42.42.0.0/16` provenientes da rede `192.168.2.0/24` (ou aceitaria ligações com essas características se trocássemos *DROP* por *ACCEPT*).
-
-```bash
-iptables –A INPUT –p tcp –s 192.168.2.0/24 -d 42.42.0.0/16 –-dport 23 –j DROP
+sudo nmap -O <ip_do_host>
 ```
 
-12. Vamos agora proteger a rede.
-Comece por apagar todas as regras que criou na *firewall*:
+O sistema operativo identificado corresponde ao real?
 
-```bash
-iptables -F
-```
 
-13. Crie uma ou mais regras para permitir que seja possível aceder ao servidor *web*, nomeadamente ao porto `80`desse servidor usando o protocolo `TCP`, sobre o qual o protocolo `HTTP` é encapsulado. 
 
-14. Crie uma ou mais regras para bloquear todo o restante tráfego que vem de fora da rede, ou seja, que passa pela firewall.
-
-15. Teste que noutras portas não é possível criar ligações pondo um serviço à espera de ligações numa porta.
-Por exemplo, pode usar o comando `nc -l 1314` para colocar um processo à espera de ligações na porta indicada como argumento.
-
-16. Teste que não é possível acesso de qualquer pacote do mundo exterior ao `sqlserver`.
-
-17. Teste que não é possível enviar pacotes *ICMP* do `sqlserver` para o mundo exterior.
-
-18. Liste as regras da *firewall*.
-
-19. Observe que continua a fazer conseguir pedidos *HTTP* do `pc1` para o `webserver`, mas que não consegue ligar-se ao `sqlserver` a partir do `pc1`.
-
-Os objetivos de isolamento na configuração de rede foram alcançados!
 
 ----
 
@@ -266,11 +125,7 @@ Os objetivos de isolamento na configuração de rede foram alcançados!
 
 - *Kathará*, [https://github.com/KatharaFramework/Kathara/wiki][3]
 
-- Oskar Andreasson, Iptables Tutorial, version 1.2.2,
-    [http://www.frozentux.net/iptables-tutorial/iptables-tutorial.html][4],
-    2006
-
   [1]: media/topologia-de-rede.png
   [2]: https://github.com/KatharaFramework/Kathara-Labs/tree/master/Application%20Level/WebServer
   [3]: https://github.com/KatharaFramework/Kathara/wiki
-  [4]: http://www.frozentux.net/iptables-tutorial/iptables-tutorial.html
+
