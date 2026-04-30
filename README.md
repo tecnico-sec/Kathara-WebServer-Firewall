@@ -8,26 +8,24 @@ Instituto Superior Técnico, Universidade de Lisboa
 
 O objetivo deste laboratório é aprender as potencialidades do *Nmap* ("Network Mapper"). O *Nmap* é uma ferramenta de código aberto amplamente utilizada para descoberta de máquinas e serviços numa rede. Permite identificar máquinas ativas, portas abertas, serviços em execução e, em muitos casos, obter informação útil sobre versões e sistemas operativos, sendo por isso muito usado em tarefas de administração, diagnóstico e auditoria de segurança.
 
-O laboratório usa uma rede baseada na do laboratório no qual foi configurado um servidor *web* e uma *firewall*. A topologia da rede contém um PC, um servidor *web* e um servidor SQL, todos na mesma LAN, interligados por um *hub* (um *collision domain* do Kathará):
+O laboratório usa uma rede semelhante à do laboratório no qual foi configurado um servidor *web* e uma *firewall*. A topologia da rede contém um PC, um servidor *web* e um servidor SQL, estando o PC numa LAN, e os restantes dispositivos noutra LAN interligados por um *hub* (um *collision domain* do Kathará):
 
 ![Topologia de Rede][1]
 
-Como poder inferir da topologia e dos ficheiros de configuração, o endereço da subrede é o 5.5.5.0/24.
 
 Em primeiro lugar, vamos configurar um servidor *web* *Apache* e um servidor de base de dados *SQL* que será usado pelo servidor *web*.
 Depois vamos então explorar o comando *Nmap*.
 
 
-## Exercício 1 -- Configuração de base
+## Exercício 1 — *Nmap* básico
 
 1. Inicie o laboratório:
-
 ```bash
 kathara lstart
 ```
+Verifique que os serviços estão ativos:
 
 2. Verifique que no `webserver` o serviço `apache2` está em execução.
-
 ```bash
 /etc/init.d/apache2 status
 ```
@@ -35,97 +33,91 @@ kathara lstart
 Se não estiver, execute-o.
 
 
-----
-
-## Exercício 2 -- *Nmap* básico
-
-Neste exercício vamos usar o *Nmap* para 
-
-1. O posto de trabalho vai ser o `pc1`. Confirme que o *Nmap* está instalado executando:
+3. O posto de trabalho vai ser o `pc1`. Confirme que o *Nmap* está instalado executando:
 
 ```bash
 nmap --version
 ```
 
-2. Execute um scan simples à subrede:
+4.  O primeiro passo de um auditor é identificar quais os sistemas ativos na rede alvo. Execute um scan apenas para descobrir hosts ativos:
 
 ```bash
-nmap 5.5.5.0/24
+nmap -sn <ip_da_rede_alvo>
 ```
 
-Quantas máquinas existem na rede e quais os seus endereços IP?
-
-3. Execute um scan apenas para descobrir hosts ativos:
+5. Execute um scan às portas TCP mais comuns dos hosts ativos descobertos no ponto anterior:
 
 ```bash
-nmap -sn 5.5.5.0/24
+nmap <ip_do_host>
 ```
+Repare nas portas abertas dos servidores. Nesta fase, deverão estar ambas no estado *open*.
 
-4. Execute um scan completo de portas TCP do `webserver`. Em que portos está à escuta o servidor Apache?
+
+
+6. Numa arquitetura segura, o servidor de base de dados nunca deve estar exposto diretamente à rede dos utilizadores (onde está o pc1).
+Aceda ao `.startup` da firewall  e modifique o set de regras de forma a que o tráfego direcionado à porta ativa do `sqlserver` fique bloqueado.
+
+7. Depois de modificar a regra na firewall, repita o scan efetuado no passo 5, direcionado agora apenas ao `sqlserver`.
 
 ```bash
-nmap -p- <ip_do_host>
+nmap -p <active_port_sqlserver> <ip_sqlserver>
 ```
 
-5. Execute um scan completo de portas TCP do `sqlserver`. O servidor MariaDB deve estar à escuta no porto TCP/3306. Está?
+- Qual a alteração no estado da porta ativa neste server?
+- Qual a diferença entre *open*, *closed* e *filtered*?
+- Porque é que a mudança de regras de Firewall resulta num estado filtered e não closed?
+
+
+8. Execute um scan completo de portas TCP do `webserver`. 
+```bash
+nmap -p- <ip_webserver>
+```
+- Porque é que este comando demora significativamente mais?
+- Em que situações é necessário realizar um scan completo em vez de um scan rápido?
+
+9. Agora que compreende como analisar um único alvo, execute um scan de portas transversal a toda a subrede:
 
 ```bash
-nmap -p- <ip_do_host>
+nmap <ip_da_rede_alvo>
 ```
+- Este tipo de scan é considerado mais "ruídoso" (gera muito tráfego). Numa auditoria real, quais as desvantagens de correr este comando contra uma rede inteira sem autorização prévia?
+---
 
-6. Procure respostas para as seguintes questões:
+## Exercício 2 — Descoberta de serviços
 
-Qual a diferença entre *open*, *closed* e *filtered*?
+O *Nmap* pode usar heurísticas para compreender mais sobre as máquinas da rede. 
 
-Porque alguns portos aparecem como *filtered*?
-
-
-----
-
-## Exercício 3 -- Descoberta de serviços e sistemas operativos
-
-O *Nmap* pode usar heurísticas para compreender mais sobre as máquinas da rede. Um primeiro caso, é a deteção de serviços, usando o comando `nmap -sV <ip_do_host>`
-
-1. Vamos detectar os serviços do `webserver`. Execute o seguinte comando medindo o tempo aproximado que demora a ser executado:
+1. Um primeiro caso, é a deteção de serviços e as respetivas versões, usando o comando seguinte, que restringe os portos inspecionados:
 
 ```bash
-nmap -sV <ip_do_host>
+nmap -sV -p <port_webserver> <ip_webserver>
 ```
 
-Repita com o seguinte comando que restringe os portos inspecionados:
+Compare o comando acima com:
+```bash
+nmap -sV <ip_webserver>
+```
+
+- Qual a diferença no tempo de execução?
+- Que informação adicional é obtida?
+- Como pode essa informação (ex: versão do Apache) ser utilizada por um atacante?
+
+---
+
+## Exercício 3 — Identificação do sistema operativo
+
+O Nmap pode inferir o sistema operativo através da análise da pilha TCP/IP.
 
 ```bash
-nmap -sV -p 22,80,443 <ip_do_host>
+nmap -O <ip_webserver>
 ```
 
-Qual a diferença entre o tempo de execução e os resultados obtidos pelos dois comandos?
+- O sistema operativo identificado corresponde ao real?
+- Que impacto pode ter uma firewall que bloqueie certos tipos de pacotes nesta deteção?
 
-2. Repita para o `sqlserver`:
-
-```bash
-nmap -sV <ip_do_host>
-```
-
-O que é que o comando diz sobre o serviço SQL?
-
-3. O *Nmap* também usa heurísticas para detectar o sistema operativo em execução numa máquina. Execute para um dos servidores:
-
-```bash
-sudo nmap -O <ip_do_host>
-```
-
-O sistema operativo identificado corresponde ao real?
-
-
-
-
-----
+---
 
 ## Referências
 
-- *Kathará*, [https://github.com/KatharaFramework/Kathara/wiki][3]
-
-  [1]: media/topologia-de-rede.png
-  [2]: https://github.com/KatharaFramework/Kathara-Labs/tree/master/Application%20Level/WebServer
-  [3]: https://github.com/KatharaFramework/Kathara/wiki
-
+- Nmap Documentation: https://nmap.org/book/man.html  
+- Kathará Wiki: https://github.com/KatharaFramework/Kathara/wiki
