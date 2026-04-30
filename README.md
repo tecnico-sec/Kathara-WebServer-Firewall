@@ -10,7 +10,7 @@ O objetivo deste laboratório é aprender as potencialidades do *Nmap* ("Network
 
 O laboratório usa uma rede semelhante à do laboratório no qual foi configurado um servidor *web* e uma *firewall*. A topologia da rede contém um PC, um servidor *web* e um servidor SQL, estando o PC numa LAN, e os restantes dispositivos noutra LAN interligados por um *hub* (um *collision domain* do Kathará):
 
-![Topologia de Rede][2]
+![Topologia de Rede](media/topologia-de-rede.png)
 
 
 Em primeiro lugar, vamos configurar um servidor *web* *Apache* e um servidor de base de dados *SQL* que será usado pelo servidor *web*.
