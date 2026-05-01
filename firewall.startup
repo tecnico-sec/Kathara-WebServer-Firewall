@@ -1,14 +1,2 @@
 ifconfig eth0 1.2.3.1 netmask 255.255.255.0 up
 ifconfig eth1 5.5.5.1 netmask 255.255.255.0 up
-
-
-# Regras Iptables
-iptables -F
-iptables -P FORWARD DROP # Por defeito, nada passa
-
-iptables -A FORWARD -p icmp -d 5.5.5.0/24 -j ACCEPT
-iptables -A FORWARD -p tcp -d 5.5.5.0/24 -j ACCEPT
-
-# Permitir tráfego de resposta (Estabelecido)
-iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
-
